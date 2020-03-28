@@ -6,67 +6,73 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float rollSpeed = 100f;
-    public float slideSpeed = 1f;
-    public float stoppingSpeed = 1f;
+    public float rollSpeed = 10f;
+    public float maxspeed = 300f;
+    public float maxRotAngle = 2f;
 
-    private Boolean rolling = false;
+    private float speed;
 
     public Rigidbody rb;
 
     private GameObject direction;
     private GameManager gm;
+    private DirectionScript dirScript;
 
     void Start() {
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         direction = GameObject.Find("Direction");
+        dirScript = direction.GetComponent<DirectionScript>();
     }
 
     // Update is called once per frame
     void Update() {
-        var speed = rb.velocity.magnitude;
-        if(rolling) {
-            if (speed < stoppingSpeed) {
-                standUp();
-            } else {
-                slide();
-            }
-        } else{
-            if (gm.spaceDown) {
-                roll();
-            }
+        rotateRoll();
+
+        speed = new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
+        if (gm.spacePressed) {
+            speed = speed + rollSpeed;
         }
+
+        speed = Math.Min(speed, maxspeed);
+
+        updateVelocity();
     }
 
     void standUp() {
         transform.localRotation = Quaternion.Euler(-90, 0, 0);
         rb.velocity = Vector3.zero;
-        rolling = false;
     }
 
-    void roll()
+    void flipSide()
     {
         //place the roll according to the camera
         transform.localRotation = Quaternion.Euler(0, direction.transform.rotation.eulerAngles.y + 90, 0);
-
-        /* push in the right direction */
-        float a = (float) (direction.transform.rotation.eulerAngles.y * (Math.PI / 180));
-        float x = (float) Math.Sin(a) * rollSpeed;
-        float z = (float) Math.Cos(a) * rollSpeed;
-        rb.AddForce(x, 0, z);
-
-        rolling = true;
     }
 
-    void slide()
+    void updateVelocity() {
+        float a = (float) (direction.transform.rotation.eulerAngles.y * (Math.PI / 180));
+        float x = (float) Math.Sin(a);
+        float z = (float) Math.Cos(a);
+
+        Vector3 desiredVelocity = new Vector3(x, 0, z);
+        desiredVelocity.Normalize();
+        desiredVelocity = desiredVelocity * (speed);
+
+        float y = rb.velocity.y;
+        rb.velocity = new Vector3(desiredVelocity.x, y, desiredVelocity.z);
+    }
+
+    void rotateRoll()
     {
-        Debug.Log(transform.localRotation.eulerAngles);
-        float x = transform.localRotation.x;
-        float z = transform.localRotation.z;
-        transform.localRotation = Quaternion.Euler(x, direction.transform.rotation.eulerAngles.y + 90, z);
+        float x = 0;
+        float y = direction.transform.rotation.eulerAngles.y + 90;
+        float z = transform.eulerAngles.z;
+
+        Vector3 desiredRot = new Vector3(x,y,z);
+        transform.rotation = Quaternion.Euler(desiredRot);
     }
 
     public bool isRolling() {
-        return rolling;
+        return true;
     }
 }
