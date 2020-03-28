@@ -56,11 +56,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKey("left"))
         {
-            rb.AddRelativeForce(100, 0, 0);
+            rb.AddRelativeForce(0, 0, 10);
         }
         else if (Input.GetKey("right"))
         {
-            rb.AddRelativeForce(-100, 0, 0);
+            rb.AddRelativeForce(0, 0, -10);
         }
     }
 }
