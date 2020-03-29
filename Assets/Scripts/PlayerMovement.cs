@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start() {
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-        direction = GameObject.Find("Direction");
+        direction = GameObject.Find("PlayerSteer");
         dirScript = direction.GetComponent<DirectionScript>();
         rb = gameObject.GetComponent<Rigidbody>();
     }
