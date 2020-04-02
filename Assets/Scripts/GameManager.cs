@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
        
     }
 
+    public void addPoints(int points)
+    {
+        score += points;
+        scoreText.text = "Score : " + score.ToString("0");
+    }
+
     void updateKeys()
     {
         leftDown = Input.GetKey("left") | Input.GetKey("q") | Input.GetKey("a");
