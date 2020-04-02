@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     private float timer;
     private void Start()
     {
-        
         scoreText.text = "Score : " + score.ToString("0");
     }
 
@@ -19,6 +18,7 @@ public class GameManager : MonoBehaviour
     {
         updateKeys();
         addScore();
+
     }
 
     void addScore()
