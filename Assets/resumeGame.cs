@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartGame : MonoBehaviour
+public class resumeGame : MonoBehaviour
 {
-
     GameManager gm;
-    public void startGame()
+
+    public void resume()
     {
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-        gm.Init();
+        gm.gameResume();
     }
 }
